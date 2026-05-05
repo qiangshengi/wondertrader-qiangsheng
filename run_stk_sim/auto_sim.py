@@ -17,10 +17,9 @@ POSITION_SIZE = 0.15      # 每只最多用15%资金
 FEE_RATE = 0.0003         # 万三手续费
 
 WATCHLIST = [
-    ("601318", "中国平安"), ("601012", "隆基绿能"), ("300059", "东方财富"),
-    ("002594", "比亚迪"),   ("300750", "宁德时代"), ("600276", "恒瑞医药"),
-    ("600519", "贵州茅台"), ("600036", "招商银行"), ("603288", "海天味业"),
-    ("601888", "中国中免"),
+    ("002236", "大华股份", "stock"),
+    ("000636", "风华高科", "stock"),
+    ("159870", "有色金属ETF", "etf"),
 ]
 
 STATE_FILE = "/root/wondertrader/run_stk_sim/sim_portfolio.json"
@@ -40,12 +39,17 @@ def calc_atr(h,l,c,p=14):
     return tr.rolling(p).mean()
 
 # ===== 信号检测 =====
-def get_signals(code, name):
+def get_signals(code, name, asset_type="stock"):
     """获取当前信号和指标状态"""
     try:
-        raw = ak.stock_zh_a_hist(symbol=code, period='daily',
-            start_date=(datetime.now()-timedelta(days=300)).strftime('%Y%m%d'),
-            end_date=datetime.now().strftime('%Y%m%d'), adjust='qfq')
+        if asset_type == "etf":
+            raw = ak.fund_etf_hist_em(symbol=code, period='daily',
+                start_date=(datetime.now()-timedelta(days=300)).strftime('%Y%m%d'),
+                end_date=datetime.now().strftime('%Y%m%d'), adjust='qfq')
+        else:
+            raw = ak.stock_zh_a_hist(symbol=code, period='daily',
+                start_date=(datetime.now()-timedelta(days=300)).strftime('%Y%m%d'),
+                end_date=datetime.now().strftime('%Y%m%d'), adjust='qfq')
         if raw is None or len(raw) < 120: return None
     except: return None
 
@@ -114,7 +118,8 @@ def run_simulation():
     sell_list = []
     for code in list(pos.keys()):
         name = pos[code]['name']
-        sig = get_signals(code, name)
+        asset_type = pos[code].get('asset_type', 'stock')
+        sig = get_signals(code, name, asset_type)
         if sig is None: continue
 
         cost = pos[code]['cost_price']
@@ -156,9 +161,9 @@ def run_simulation():
 
     # 2. 扫描所有股票的买入信号
     buy_candidates = []
-    for code, name in WATCHLIST:
+    for code, name, asset_type in WATCHLIST:
         if code in pos: continue  # 已持仓跳过
-        sig = get_signals(code, name)
+        sig = get_signals(code, name, asset_type)
         if sig is None: continue
 
         if sig['up'] and sig['score'] >= 3:
@@ -172,6 +177,7 @@ def run_simulation():
                     'signal':buy_sig,'score':sig['score'],
                     'atr_stop':sig['close'] - 2.5 * sig['atr'],
                     'j':sig['j'],'qs':sig['qs'],'dage':sig['dage'],
+                    'asset_type':asset_type,
                 })
 
     # 3. 按评分排序，优先买评分高的
@@ -190,6 +196,7 @@ def run_simulation():
         pos[bc['code']] = {
             'name':bc['name'],'cost_price':bc['price'],'qty':qty,
             'buy_date':today,'signal':bc['signal'],'hold_days':0,
+            'asset_type':bc['asset_type'],
         }
 
         trade = {

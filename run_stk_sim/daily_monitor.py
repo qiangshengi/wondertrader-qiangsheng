@@ -17,16 +17,9 @@ TAKE_PROFIT = 1.20
 STOP_LOSS_MAX = 0.90
 
 WATCHLIST = [
-    ("601318", "中国平安"),
-    ("601012", "隆基绿能"),
-    ("300059", "东方财富"),
-    ("002594", "比亚迪"),
-    ("300750", "宁德时代"),
-    ("600276", "恒瑞医药"),
-    ("600519", "贵州茅台"),
-    ("600036", "招商银行"),
-    ("603288", "海天味业"),
-    ("601888", "中国中免"),
+    ("002236", "大华股份", "stock"),
+    ("000636", "风华高科", "stock"),
+    ("159870", "有色金属ETF", "etf"),
 ]
 
 STATE_FILE = "/root/wondertrader/run_stk_sim/portfolio.json"
@@ -43,12 +36,17 @@ def calc_atr(h,l,c,p=14):
     tr=pd.concat([h-l,abs(h-c.shift(1)),abs(l-c.shift(1))],axis=1).max(axis=1)
     return tr.rolling(p).mean()
 
-def analyze_stock(code, name, positions):
+def analyze_stock(code, name, positions, asset_type="stock"):
     """分析单只股票，返回信号"""
     try:
-        raw = ak.stock_zh_a_hist(symbol=code, period='daily',
-            start_date=(datetime.now()-timedelta(days=300)).strftime('%Y%m%d'),
-            end_date=datetime.now().strftime('%Y%m%d'), adjust='qfq')
+        if asset_type == "etf":
+            raw = ak.fund_etf_hist_em(symbol=code, period='daily',
+                start_date=(datetime.now()-timedelta(days=300)).strftime('%Y%m%d'),
+                end_date=datetime.now().strftime('%Y%m%d'), adjust='qfq')
+        else:
+            raw = ak.stock_zh_a_hist(symbol=code, period='daily',
+                start_date=(datetime.now()-timedelta(days=300)).strftime('%Y%m%d'),
+                end_date=datetime.now().strftime('%Y%m%d'), adjust='qfq')
         if raw is None or len(raw) < 120:
             return None
     except:
@@ -158,8 +156,8 @@ def main():
     today = datetime.now().strftime('%Y-%m-%d')
 
     results = []
-    for code, name in WATCHLIST:
-        r = analyze_stock(code, name, positions)
+    for code, name, asset_type in WATCHLIST:
+        r = analyze_stock(code, name, positions, asset_type)
         if r: results.append(r)
 
     buys = [r for r in results if r['signal']=='BUY']
