@@ -1,0 +1,17 @@
+# 执行器配置
+executers:
+-   active: true
+    id: exec
+    trader: mocker
+    scale: 1
+
+    policy:
+        default:
+            name: WtExeFact.WtMinImpactExeUnit
+            offset: 0
+            expire: 5
+            pricemode: 1
+            span: 500
+            byrate: false
+            lots: 100
+            rate: 0

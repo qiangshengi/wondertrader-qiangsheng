@@ -1,0 +1,10 @@
+# 股票模拟盘 - 行情解析器
+# 使用UDP接收Python脚本转发的实时行情
+parsers:
+-   active: true
+    id: parser1
+    module: ParserUDP
+    host: 127.0.0.1
+    bport: 9001
+    sport: 3997
+    filter: ''

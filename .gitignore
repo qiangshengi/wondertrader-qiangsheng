@@ -1,0 +1,81 @@
+__pycache__/
+**/__pycache__/
+*.pyc
+*.bak
+
+# Build output
+src/build_all/
+build_all/
+
+# Binary libraries
+*.so
+*.so.*
+*.o
+*.a
+
+# Binary data storage
+*.dsb
+
+# CSV data (too large, regenerate locally)
+*.csv
+
+# Log files
+*.log
+*.txt
+*_output.log
+
+# WonderTrader generated data
+bt_dragons/csv_data/
+bt_dragons/csv_data_100/
+bt_dragons/storage/
+bt_dragons/test_dualthrust/
+bt_dragons/*/BtLogs/
+bt_dragons/*/outputs_bt/
+bt_dragons/common/
+
+run_bt_zge/outputs_bt/
+run_bt_zge/storage/
+run_bt_zge/BtLogs/
+
+run_cta_sim/WtRunner
+run_cta_sim/lib*.so
+run_cta_sim/parsers/
+run_cta_sim/traders/
+
+run_stk_sim/WtRunner
+run_stk_sim/lib*.so
+run_stk_sim/__pycache__/
+
+# Large generated JSON (contracts/stocks db, auto-download)
+**/contracts.json
+**/stocks.json
+**/hots.json
+**/sessions.json
+**/holidays.json
+**/fees.json
+**/fees_stk.json
+**/commodities.json
+**/stk_comms.json
+
+# WonderTrader log/output dirs
+logs/
+BtLogs/
+outputs_bt/
+
+# Executable binaries
+WtRunner
+WtBtRunner
+
+# Report/summary files (regenerate locally)
+*_summary.json
+*_trades.csv
+backtest_output*
+backtest_v*_output*
+backtest_summary*
+full_run.log
+wt_bt_debug.log
+
+# Specific txt files
+run_stk_sim/daily_report.txt
+run_stk_sim/sim_report.txt
+.git_backup/

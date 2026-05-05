@@ -1,0 +1,6 @@
+# 股票模拟盘 - TraderMocker（纯模拟，不需要券商账号）
+traders:
+-   active: true
+    id: mocker
+    module: TraderMocker
+    savedata: true

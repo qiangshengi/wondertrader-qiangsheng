@@ -1,0 +1,138 @@
+# 股票模拟盘 - 强生战法V3
+basefiles:
+    commodity: commodities.json
+    contract: contracts.json
+    holiday: holidays.json
+    hot: hots.json
+    session: sessions.json
+
+data:
+    store:
+        path: ./stk_data/
+
+env:
+    name: cta
+    fees: fees_stk.json
+    filters: filters.yaml
+    product:
+        session: SD0930
+    riskmon:
+        active: true
+        module: WtRiskMonFact
+        name: SimpleRiskMon
+        base_amount: 100000
+        basic_ratio: 101
+        calc_span: 5
+        inner_day_active: true
+        inner_day_fd: 15.0
+        multi_day_active: true
+        multi_day_fd: 30.0
+        risk_scale: 0.5
+        risk_span: 30
+
+strategies:
+    cta:
+    -   active: true
+        id: qs_pingan
+        name: WtCtaStraFact.QS
+        params:
+            code: SSE.STK.601318
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_longi
+        name: WtCtaStraFact.QS
+        params:
+            code: SSE.STK.601012
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_east
+        name: WtCtaStraFact.QS
+        params:
+            code: SZSE.STK.300059
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_byd
+        name: WtCtaStraFact.QS
+        params:
+            code: SZSE.STK.002594
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_catl
+        name: WtCtaStraFact.QS
+        params:
+            code: SZSE.STK.300750
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_hengrui
+        name: WtCtaStraFact.QS
+        params:
+            code: SSE.STK.600276
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_moutai
+        name: WtCtaStraFact.QS
+        params:
+            code: SSE.STK.600519
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_cmb
+        name: WtCtaStraFact.QS
+        params:
+            code: SSE.STK.600036
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_haitian
+        name: WtCtaStraFact.QS
+        params:
+            code: SSE.STK.603288
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+    -   active: true
+        id: qs_cts
+        name: WtCtaStraFact.QS
+        params:
+            code: SSE.STK.601888
+            period: d
+            count: 200
+            lots: 100
+            stock: true
+
+executers: executers.yaml
+parsers: tdparsers.yaml
+traders: tdtraders.yaml
+bspolicy: actpolicy.yaml
